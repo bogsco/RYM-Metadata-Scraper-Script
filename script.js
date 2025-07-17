@@ -61,6 +61,14 @@
             window[chartNameCamel] = [];
         }
         window[chartNameCamel] = mergeItems(window[chartNameCamel], newItems);
+        // Get the chart title from the h1 element
+        const title = document.querySelector('h1#page_charts_section_charts_header_chart_name')?.innerHTML?.trim() || chartNameCamel;
+        // Print out the chart data as a raw JSON object with title and items
+        const output = {
+            title: title,
+            items: window[chartNameCamel]
+        };
+        console.log(JSON.stringify(output, null, 2));
     }
 
     // Run on initial load
