@@ -1,4 +1,4 @@
-song charts/
-album charts/
-misc charts/
+song charts/*
+album charts/*
+misc charts/*
 .cache
