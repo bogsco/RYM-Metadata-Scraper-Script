@@ -53,6 +53,39 @@
         return existing;
     }
 
+    // Add a button to the page to copy chart JSON to clipboard
+    function addCopyButton() {
+        if (document.getElementById('rym-copy-json-btn')) return; // Prevent duplicates
+        const btn = document.createElement('button');
+        btn.id = 'rym-copy-json-btn';
+        btn.textContent = 'Copy Chart JSON to Clipboard';
+        btn.style.position = 'fixed';
+        btn.style.top = '20px';
+        btn.style.right = '20px';
+        btn.style.zIndex = 9999;
+        btn.style.padding = '10px 16px';
+        btn.style.background = '#1db954';
+        btn.style.color = '#fff';
+        btn.style.border = 'none';
+        btn.style.borderRadius = '6px';
+        btn.style.fontSize = '16px';
+        btn.style.cursor = 'pointer';
+        btn.onclick = function() {
+            const chartNameCamel = getChartNameCamel();
+            const title = document.querySelector('h1#page_charts_section_charts_header_chart_name')?.innerHTML?.trim() || chartNameCamel;
+            const output = {
+                title: title,
+                items: window[chartNameCamel] || []
+            };
+            const json = JSON.stringify(output, null, 2);
+            navigator.clipboard.writeText(json).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy Chart JSON to Clipboard', 1500);
+            });
+        };
+        document.body.appendChild(btn);
+    }
+
     // Main function to run on each page load/change
     function runScraper() {
         const chartNameCamel = getChartNameCamel();
@@ -73,13 +106,17 @@
 
     // Run on initial load
     runScraper();
+    addCopyButton();
 
     // Watch for URL changes (for SPA/AJAX navigation)
     let lastUrl = location.href;
     const observer = new MutationObserver(() => {
         if (location.href !== lastUrl) {
             lastUrl = location.href;
-            setTimeout(runScraper, 500); // Wait for DOM update
+            setTimeout(() => {
+                runScraper();
+                addCopyButton();
+            }, 500); // Wait for DOM update
         }
     });
     observer.observe(document.body, { childList: true, subtree: true });

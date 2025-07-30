@@ -50,7 +50,7 @@ for idx, item in enumerate(songs):
         tracks = result['tracks']['items']
         if tracks:
             track_uris.append(tracks[0]['uri'])
-            print(f"[{idx+1}/{len(songs)}] Found: {item['song']} by {item['artist']}")
+            print(f"[{idx+1}/{len(songs)}] Found: {item['artist']} - {item['song']}")
         else:
             print(f"[{idx+1}/{len(songs)}] Not found on Spotify: {query}")
     except Exception as e:
